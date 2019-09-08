@@ -13,10 +13,12 @@ function brightness_normalization(new_brightness)
     nargin
     
     if nargin <1
-        new_brightness = ceil(mean(table_original.brightness_original));
+        new_brightness = mean(table_original.brightness_original);
     end
     
-    files = [dir([imgs_dir filesep '*.png']); dir([imgs_dir filesep '*.jpg'])];
+    writetable(table_original, [imgs_dir filesep 'original_table.csv']); 
+
+    files = [dir([imgs_dir filesep '*.png']); dir([imgs_dir filesep '*.jpg']);dir([imgs_dir filesep '*.bmp'])];
     files = {files.name}';
     for img_id = 1:size(files, 1)
         clc
@@ -35,6 +37,7 @@ function brightness_normalization(new_brightness)
             end
             brightness =  mean2(rgb2gray(image));
         end
+        [imgs_dir filesep 'new' filesep img]
         imwrite(image, [imgs_dir filesep 'new' filesep img]);
     end
     
@@ -42,12 +45,13 @@ function brightness_normalization(new_brightness)
     
     clc
     disp('Done!');
+    disp(new_brightness);
     output_table = [table_original, table_new];
     writetable(output_table, [imgs_dir filesep 'output_table.csv']); 
 end
 
 function table = check_files(imgs_dir, type)
-    files = [dir([imgs_dir filesep '*.png']); dir([imgs_dir filesep '*.jpg'])];
+    files = [dir([imgs_dir filesep '*.png']); dir([imgs_dir filesep '*.jpg']);dir([imgs_dir filesep '*.bmp'])];
     files = {files.name}';
     for img_id = 1:size(files, 1)
         img    = files{img_id};
